@@ -35,7 +35,7 @@ regexes = [
   '''version:\s*[\d\.]+''',
 ]
 
-[allowlist.regexTarget]
+[[allowlist.regexTarget]]
   # Allow specific patterns in README files
   paths = ['''README\.md''']
   regexes = [
