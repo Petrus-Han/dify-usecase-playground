@@ -35,11 +35,6 @@ regexes = [
   '''version:\s*[\d\.]+''',
 ]
 
-[[allowlist.regexTarget]]
-  # Allow specific patterns in README files
-  paths = ['''README\.md''']
-  regexes = [
-    '''example.*=.*['"]?[a-zA-Z0-9_-]+['"]?''',
-    '''placeholder.*=.*['"]?[a-zA-Z0-9_-]+['"]?''',
-  ]
+# Note: regexTarget removed due to configuration format issues
+# The general allowlist regexes above should cover README files
 
