@@ -114,6 +114,16 @@ This is a personal project, but suggestions and feedback are welcome! Feel free 
 - Submit pull requests with improvements
 - Share your own use cases
 
+### Branch Protection
+
+This repository uses branch protection rules to maintain code quality:
+- All changes must go through Pull Requests
+- PRs require at least one approval before merging
+- All CI checks must pass before merging
+- Direct pushes to `main` branch are disabled
+
+See [Branch Protection Setup Guide](.github/BRANCH_PROTECTION.md) for details on configuring these rules.
+
 ## License
 
 This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.

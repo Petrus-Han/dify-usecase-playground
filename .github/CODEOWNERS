@@ -1,0 +1,20 @@
+# Default owners for everything in the repo
+# These users will be automatically requested for review on PRs
+* @petrus
+
+# Use case maintainers
+/usecases/ @petrus
+
+# CI/CD workflows and configuration
+/.github/workflows/ @petrus
+/.github/CODEOWNERS @petrus
+/.gitleaks.toml @petrus
+
+# Documentation
+/README*.md @petrus
+/CONTRIBUTING.md @petrus
+/SECURITY.md @petrus
+
+# License and legal files
+/LICENSE @petrus
+
