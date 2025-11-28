@@ -1,0 +1,128 @@
+name: Code Language Check
+
+on:
+  pull_request:
+    branches: [ main, master, develop ]
+  push:
+    branches: [ main, master, develop ]
+
+jobs:
+  check-git-messages:
+    name: Ensure git commit messages and PR content are in English (for internationalization)
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for commit message check
+
+      - name: Note about code language policy
+        run: |
+          echo "ℹ️  Code files may contain Chinese or other languages for internationalization purposes."
+          echo "ℹ️  However, git commit messages and PR content should be in English to maintain international project positioning."
+
+      - name: Check commit messages for English
+        id: check-commits
+        if: github.event_name == 'pull_request'
+        run: |
+          echo "Checking commit messages in PR for English (maintaining international project positioning)..."
+          
+          # Get commits in this PR
+          COMMITS=$(git log --format="%H" origin/${{ github.base_ref }}..HEAD 2>/dev/null || echo "")
+          
+          if [ -z "$COMMITS" ]; then
+            echo "⚠️  Could not determine commits in PR, skipping commit message check"
+            exit 0
+          fi
+          
+          VIOLATION_COUNT=0
+          VIOLATIONS=""
+          
+          for commit in $COMMITS; do
+            COMMIT_MSG=$(git log --format="%B" -n 1 $commit 2>/dev/null || echo "")
+            COMMIT_SUBJECT=$(git log --format="%s" -n 1 $commit 2>/dev/null || echo "")
+            
+            if [ -z "$COMMIT_SUBJECT" ]; then
+              continue
+            fi
+            
+            # Check commit subject and body for Chinese characters
+            if echo "$COMMIT_SUBJECT" | grep -P "[\x{4e00}-\x{9fff}]" > /dev/null 2>&1; then
+              echo "❌ Commit $commit has Chinese in subject: $COMMIT_SUBJECT"
+              VIOLATIONS="${VIOLATIONS}\n  - Commit: $commit\n    Subject: $COMMIT_SUBJECT"
+              VIOLATION_COUNT=$((VIOLATION_COUNT + 1))
+            fi
+            
+            if [ -n "$COMMIT_MSG" ] && echo "$COMMIT_MSG" | grep -P "[\x{4e00}-\x{9fff}]" > /dev/null 2>&1; then
+              echo "❌ Commit $commit has Chinese in message body"
+              VIOLATIONS="${VIOLATIONS}\n  - Commit: $commit"
+              VIOLATION_COUNT=$((VIOLATION_COUNT + 1))
+            fi
+          done
+          
+          if [ $VIOLATION_COUNT -gt 0 ]; then
+            echo "::error::Found $VIOLATION_COUNT commit(s) with Chinese characters. Commit messages should be in English to maintain international project positioning."
+            echo "Violations:$VIOLATIONS"
+            exit 1
+          else
+            echo "✅ All commit messages are in English"
+          fi
+
+      - name: Check PR title and description for English
+        id: check-pr-content
+        if: github.event_name == 'pull_request'
+        run: |
+          echo "Checking PR title and description for English (maintaining international project positioning)..."
+          
+          PR_TITLE="${{ github.event.pull_request.title }}"
+          PR_BODY="${{ github.event.pull_request.body }}"
+          
+          VIOLATIONS=""
+          VIOLATION_COUNT=0
+          
+          # Check PR title
+          if [ -n "$PR_TITLE" ] && echo "$PR_TITLE" | grep -P "[\x{4e00}-\x{9fff}]" > /dev/null 2>&1; then
+            echo "❌ PR title contains Chinese: $PR_TITLE"
+            VIOLATIONS="${VIOLATIONS}\n  - PR Title: $PR_TITLE"
+            VIOLATION_COUNT=$((VIOLATION_COUNT + 1))
+          fi
+          
+          # Check PR body/description
+          if [ -n "$PR_BODY" ] && echo "$PR_BODY" | grep -P "[\x{4e00}-\x{9fff}]" > /dev/null 2>&1; then
+            echo "❌ PR description contains Chinese"
+            VIOLATIONS="${VIOLATIONS}\n  - PR Description contains Chinese characters"
+            VIOLATION_COUNT=$((VIOLATION_COUNT + 1))
+          fi
+          
+          if [ $VIOLATION_COUNT -gt 0 ]; then
+            echo "::error::PR title/description contains Chinese. Please use English for PR titles and descriptions to maintain international project positioning."
+            echo "Violations:$VIOLATIONS"
+            exit 1
+          else
+            echo "✅ PR title and description are in English"
+          fi
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "## Git Message & PR Language Check Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "ℹ️  **Note**: Code files may contain Chinese or other languages for internationalization purposes." >> $GITHUB_STEP_SUMMARY
+          echo "However, git commit messages and PR content should be in English to maintain international project positioning." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            if [ "${{ steps.check-commits.outcome }}" == "success" ]; then
+              echo "✅ Commit messages: All in English" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "❌ Commit messages: Found non-English content" >> $GITHUB_STEP_SUMMARY
+            fi
+            
+            if [ "${{ steps.check-pr-content.outcome }}" == "success" ]; then
+              echo "✅ PR content: All in English" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "❌ PR content: Found non-English content" >> $GITHUB_STEP_SUMMARY
+            fi
+          fi
+

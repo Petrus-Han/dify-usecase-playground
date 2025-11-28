@@ -1,0 +1,45 @@
+# Gitleaks configuration for Dify Use Case Playground
+# This file configures what secrets to detect and what to ignore
+
+title = "Dify Use Case Playground Secret Detection"
+
+[extend]
+# Use default gitleaks rules
+useDefault = true
+
+[allowlist]
+description = "Allowlist for false positives"
+paths = [
+  '''\.gitleaks\.toml''',
+  '''\.gitignore''',
+  '''README\.md''',
+  '''LICENSE''',
+  '''\.github/workflows/.*\.yml''',
+]
+
+commits = [
+  # Allow commits that are just documentation updates
+  '''^docs?\(.*\):.*''',
+]
+
+regexes = [
+  # Allow example/placeholder patterns
+  '''example.*key''',
+  '''placeholder.*token''',
+  '''your-.*-key''',
+  '''xxx.*xxx''',
+  '''sample.*secret''',
+  # Allow marketplace plugin identifiers (these are public identifiers)
+  '''marketplace_plugin_unique_identifier''',
+  # Allow version numbers that might look like tokens
+  '''version:\s*[\d\.]+''',
+]
+
+[allowlist.regexTarget]
+  # Allow specific patterns in README files
+  paths = ['''README\.md''']
+  regexes = [
+    '''example.*=.*['"]?[a-zA-Z0-9_-]+['"]?''',
+    '''placeholder.*=.*['"]?[a-zA-Z0-9_-]+['"]?''',
+  ]
+

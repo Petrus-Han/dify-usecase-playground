@@ -1,0 +1,10 @@
+# Ensure sensitive files are not accidentally committed
+*.env linguist-detectable=false
+*.secret linguist-detectable=false
+*.key linguist-detectable=false
+secrets.* linguist-detectable=false
+
+# YAML files
+*.yml linguist-language=YAML
+*.yaml linguist-language=YAML
+

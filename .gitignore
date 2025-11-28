@@ -1,0 +1,50 @@
+# Sensitive files and credentials
+*.env
+*.env.local
+*.env.*.local
+.env
+.env.local
+.env.*.local
+
+# API keys and secrets
+secrets.yml
+secrets.yaml
+config.local.yml
+config.local.yaml
+*.secret
+*.key
+*.pem
+*.p12
+*.pfx
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Backup files
+*.bak
+*.backup
+*~
+
+# Local configuration overrides
+local.yml
+local.yaml
+config.local.*
+
