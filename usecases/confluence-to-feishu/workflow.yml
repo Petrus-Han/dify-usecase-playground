@@ -682,7 +682,8 @@ workflow:
           \    data = json.loads(payload) if isinstance(payload, str) else payload\n\
           \    if \"body\" in data and \"method\" in data:\n        data = data[\"\
           body\"]\n\n    page = data.get(\"page\", {})\n    comment = data.get(\"\
-          comment\", {})\n\n    actor_email = comment.get(\"author\", \"Unknown\"\
+          comment\", {})\n\n    owner_email = page.get(\"owner\", \"Unknown\"\
+          )\n    actor_email = comment.get(\"author\", \"Unknown\"\
           )\n    actor = _name_from_email(actor_email)\n    body = comment.get(\"\
           body\", \"\")\n    if len(body) > 200:\n        body = body[:200] + \"...\"\
           \n    time = _format_time(data.get(\"time\", \"\"))\n\n    elements = [\n\
@@ -709,7 +710,7 @@ workflow:
           : {\"wide_screen_mode\": True},\n        \"header\": {\n            \"title\"\
           : {\"tag\": \"plain_text\", \"content\": \"\U0001F4AC Confluence Comment\"\
           },\n            \"template\": \"green\",\n        },\n        \"elements\"\
-          : elements,\n    }\n\n    return {\n        \"email\": actor_email,\n  \
+          : elements,\n    }\n\n    return {\n        \"email\": owner_email,\n  \
           \      \"content\": json.dumps(card, ensure_ascii=False),\n    }\n"
         code_language: python3
         outputs:
@@ -775,7 +776,7 @@ workflow:
           \        \"header\": {\n            \"title\": {\"tag\": \"plain_text\"\
           , \"content\": \"✏️ Confluence Page Edited\"},\n            \"template\"\
           : \"turquoise\",\n        },\n        \"elements\": elements,\n    }\n\n\
-          \    return {\n        \"email\": actor_email,\n        \"content\": json.dumps(card,\
+          \    return {\n        \"email\": owner_email,\n        \"content\": json.dumps(card,\
           \ ensure_ascii=False),\n    }\n"
         code_language: python3
         outputs:

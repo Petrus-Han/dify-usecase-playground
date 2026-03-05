@@ -26,6 +26,7 @@ def main(payload: str) -> dict:
     page = data.get("page", {})
     comment = data.get("comment", {})
 
+    owner_email = page.get("owner", "Unknown")
     actor_email = comment.get("author", "Unknown")
     actor = _name_from_email(actor_email)
     body = comment.get("body", "")
@@ -93,6 +94,6 @@ def main(payload: str) -> dict:
     }
 
     return {
-        "email": actor_email,
+        "email": owner_email,
         "content": json.dumps(card, ensure_ascii=False),
     }

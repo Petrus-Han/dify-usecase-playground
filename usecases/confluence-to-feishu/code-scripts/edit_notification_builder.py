@@ -75,6 +75,6 @@ def main(payload: str) -> dict:
     }
 
     return {
-        "email": actor_email,
+        "email": owner_email,
         "content": json.dumps(card, ensure_ascii=False),
     }
