@@ -25,8 +25,10 @@ def main(payload: str) -> dict:
 
     page = data.get("page", {})
     actor_email = data.get("actor", {}).get("email", "Unknown")
-    actor = _name_from_email(actor_email)
     owner_email = data.get("owner", {}).get("email", "")
+    if actor_email == owner_email:
+        return {"email": "", "content": ""}
+    actor = _name_from_email(actor_email)
     owner = _name_from_email(owner_email) if owner_email else ""
     time = _format_time(data.get("time", ""))
 

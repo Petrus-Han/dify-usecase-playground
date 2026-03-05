@@ -684,7 +684,8 @@ workflow:
           body\"]\n\n    page = data.get(\"page\", {})\n    comment = data.get(\"\
           comment\", {})\n\n    owner_email = page.get(\"owner\", \"Unknown\"\
           )\n    actor_email = comment.get(\"author\", \"Unknown\"\
-          )\n    actor = _name_from_email(actor_email)\n    body = comment.get(\"\
+          )\n    if actor_email == owner_email:\n        return {\"email\": \"\", \"\
+          content\": \"\"}\n    actor = _name_from_email(actor_email)\n    body = comment.get(\"\
           body\", \"\")\n    if len(body) > 200:\n        body = body[:200] + \"...\"\
           \n    time = _format_time(data.get(\"time\", \"\"))\n\n    elements = [\n\
           \        {\n            \"tag\": \"div\",\n            \"text\": {\n   \
@@ -754,8 +755,10 @@ workflow:
           \    data = json.loads(payload) if isinstance(payload, str) else payload\n\
           \    if \"body\" in data and \"method\" in data:\n        data = data[\"\
           body\"]\n\n    page = data.get(\"page\", {})\n    actor_email = data.get(\"\
-          actor\", {}).get(\"email\", \"Unknown\")\n    actor = _name_from_email(actor_email)\n\
-          \    owner_email = data.get(\"owner\", {}).get(\"email\", \"\")\n    owner\
+          actor\", {}).get(\"email\", \"Unknown\")\n    owner_email = data.get(\"\
+          owner\", {}).get(\"email\", \"\")\n    if actor_email == owner_email:\n  \
+          \      return {\"email\": \"\", \"content\": \"\"}\n    actor = _name_from_email(actor_email)\n\
+          \    owner\
           \ = _name_from_email(owner_email) if owner_email else \"\"\n    time = _format_time(data.get(\"\
           time\", \"\"))\n\n    elements = [\n        {\n            \"tag\": \"div\"\
           ,\n            \"text\": {\n                \"tag\": \"lark_md\",\n    \

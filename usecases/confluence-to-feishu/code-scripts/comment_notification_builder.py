@@ -28,6 +28,8 @@ def main(payload: str) -> dict:
 
     owner_email = page.get("owner", "Unknown")
     actor_email = comment.get("author", "Unknown")
+    if actor_email == owner_email:
+        return {"email": "", "content": ""}
     actor = _name_from_email(actor_email)
     body = comment.get("body", "")
     if len(body) > 200:
