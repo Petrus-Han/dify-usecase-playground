@@ -1,0 +1,16 @@
+{
+  "event_type": "comment",
+  "time": "{{now}}",
+  "page": {
+    "title": "{{page.title}}",
+    "url": "{{page.url}}",
+    "author": "{{page.author.emailAddress}}",
+    "editor": "{{page.editor.emailAddress}}",
+    "owner": "{{page.owner.emailAddress}}"
+  },
+  "comment": {
+    "author": "{{comment.author.emailAddress}}",
+    "url": "{{comment.url}}",
+    "body": "{{comment.body}}"
+  }
+}

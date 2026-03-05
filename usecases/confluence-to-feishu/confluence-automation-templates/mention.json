@@ -1,0 +1,18 @@
+{
+  "event_type": "mention",
+  "time": "{{now}}",
+  "page": {
+    "title": "{{page.title}}",
+    "url": "{{page.url}}",
+    "author": "{{page.author.emailAddress}}"
+  },
+  "blogpost": {
+    "title": "{{blogpost.title}}",
+    "url": "{{blogpost.url}}",
+    "author": "{{blogpost.author.emailAddress}}"
+  },
+  "mentions": {
+    "accountId": "{{user.accountId}}",
+    "email": "{{user.emailAddress}}"
+  }
+}
