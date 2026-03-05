@@ -92,28 +92,6 @@ workflow:
         isInLoop: false
         sourceType: code
         targetType: tool
-      id: 17726200324410-source-17726200410700-target
-      source: '17726200324410'
-      sourceHandle: source
-      target: '17726200410700'
-      targetHandle: target
-      type: custom
-      zIndex: 0
-    - data:
-        isInLoop: false
-        sourceType: code
-        targetType: tool
-      id: 17726200353670-source-17726200447000-target
-      source: '17726200353670'
-      sourceHandle: source
-      target: '17726200447000'
-      targetHandle: target
-      type: custom
-      zIndex: 0
-    - data:
-        isInLoop: false
-        sourceType: code
-        targetType: tool
       id: 17726200308190-source-17726212517840-target
       source: '17726200308190'
       sourceHandle: source
@@ -189,6 +167,52 @@ workflow:
       targetHandle: target
       type: custom
       zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: code
+        targetType: if-else
+      id: 17726200353670-source-1772698447593-target
+      source: '17726200353670'
+      sourceHandle: source
+      target: '1772698447593'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: if-else
+        targetType: tool
+      id: 1772698447593-true-17726200447000-target
+      source: '1772698447593'
+      sourceHandle: 'true'
+      target: '17726200447000'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: code
+        targetType: if-else
+      id: 17726200324410-source-1772698477175-target
+      source: '17726200324410'
+      sourceHandle: source
+      target: '1772698477175'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: if-else
+        targetType: tool
+      id: 1772698477175-true-17726200410700-target
+      source: '1772698477175'
+      sourceHandle: 'true'
+      target: '17726200410700'
+      targetHandle: target
+      type: custom
+      zIndex: 0
     nodes:
     - data:
         async_mode: true
@@ -198,7 +222,7 @@ workflow:
         method: POST
         params: []
         response_body: ''
-        selected: true
+        selected: false
         status_code: 200
         title: confluence event
         type: trigger-webhook
@@ -218,7 +242,7 @@ workflow:
       positionAbsolute:
         x: -644.7505534290547
         y: 253.76289592873326
-      selected: true
+      selected: false
       sourcePosition: right
       targetPosition: left
       type: custom
@@ -544,7 +568,7 @@ workflow:
           receive_id_type: ''
         plugin_id: langgenius/feishu_message
         plugin_unique_identifier: langgenius/feishu_message:0.0.1@f826c248b7e1cfb5a93e9c4ac526275a633997130f47d65e02dc40d8ae584b3c
-        provider_icon: ""
+        provider_icon: ''
         provider_id: langgenius/feishu_message/feishu_message
         provider_name: langgenius/feishu_message/feishu_message
         provider_type: builtin
@@ -573,10 +597,10 @@ workflow:
       id: '1772619783917'
       position:
         x: 822.5876834690885
-        y: -26.681295413007476
+        y: -26.68129541300746
       positionAbsolute:
         x: 822.5876834690885
-        y: -26.681295413007476
+        y: -26.68129541300746
       selected: false
       sourcePosition: right
       targetPosition: left
@@ -682,12 +706,12 @@ workflow:
           \    data = json.loads(payload) if isinstance(payload, str) else payload\n\
           \    if \"body\" in data and \"method\" in data:\n        data = data[\"\
           body\"]\n\n    page = data.get(\"page\", {})\n    comment = data.get(\"\
-          comment\", {})\n\n    owner_email = page.get(\"owner\", \"Unknown\"\
-          )\n    actor_email = comment.get(\"author\", \"Unknown\"\
-          )\n    if actor_email == owner_email:\n        return {\"email\": \"\", \"\
-          content\": \"\"}\n    actor = _name_from_email(actor_email)\n    body = comment.get(\"\
-          body\", \"\")\n    if len(body) > 200:\n        body = body[:200] + \"...\"\
-          \n    time = _format_time(data.get(\"time\", \"\"))\n\n    elements = [\n\
+          comment\", {})\n    \n    owner_email = page.get(\"owner\", \"Unknown\"\
+          ) \n    actor_email = comment.get(\"author\", \"Unknown\")\n    if actor_email\
+          \ == owner_email:\n        return {\"email\": \"\", \"content\": \"\"}\n\
+          \    actor = _name_from_email(actor_email)\n    body = comment.get(\"body\"\
+          , \"\")\n    if len(body) > 200:\n        body = body[:200] + \"...\"\n\
+          \    time = _format_time(data.get(\"time\", \"\"))\n\n    elements = [\n\
           \        {\n            \"tag\": \"div\",\n            \"text\": {\n   \
           \             \"tag\": \"lark_md\",\n                \"content\": f\"**[{page.get('title',\
           \ 'Untitled')}]({page.get('url', '')})**\",\n            },\n        },\n\
@@ -756,31 +780,31 @@ workflow:
           \    if \"body\" in data and \"method\" in data:\n        data = data[\"\
           body\"]\n\n    page = data.get(\"page\", {})\n    actor_email = data.get(\"\
           actor\", {}).get(\"email\", \"Unknown\")\n    owner_email = data.get(\"\
-          owner\", {}).get(\"email\", \"\")\n    if actor_email == owner_email:\n  \
-          \      return {\"email\": \"\", \"content\": \"\"}\n    actor = _name_from_email(actor_email)\n\
-          \    owner\
-          \ = _name_from_email(owner_email) if owner_email else \"\"\n    time = _format_time(data.get(\"\
-          time\", \"\"))\n\n    elements = [\n        {\n            \"tag\": \"div\"\
-          ,\n            \"text\": {\n                \"tag\": \"lark_md\",\n    \
-          \            \"content\": f\"**[{page.get('title', 'Untitled')}]({page.get('url',\
-          \ '')})**\",\n            },\n        },\n        {\n            \"tag\"\
-          : \"div\",\n            \"text\": {\n                \"tag\": \"lark_md\"\
-          ,\n                \"content\": f\"Edited by **{actor}**\" + (f\"  ·  Owner:\
-          \ {owner}\" if owner else \"\"),\n            },\n        },\n        {\"\
-          tag\": \"hr\"},\n        {\n            \"tag\": \"action\",\n         \
-          \   \"actions\": [\n                {\n                    \"tag\": \"button\"\
-          ,\n                    \"text\": {\"tag\": \"plain_text\", \"content\":\
-          \ \"View Page\"},\n                    \"url\": page.get(\"url\", \"\"),\n\
-          \                    \"type\": \"primary\",\n                }\n       \
-          \     ],\n        },\n        {\n            \"tag\": \"note\",\n      \
-          \      \"elements\": [\n                {\"tag\": \"plain_text\", \"content\"\
-          : f\"{time}  ·  Confluence Notification\"},\n            ],\n        },\n\
-          \    ]\n\n    card = {\n        \"config\": {\"wide_screen_mode\": True},\n\
-          \        \"header\": {\n            \"title\": {\"tag\": \"plain_text\"\
-          , \"content\": \"✏️ Confluence Page Edited\"},\n            \"template\"\
-          : \"turquoise\",\n        },\n        \"elements\": elements,\n    }\n\n\
-          \    return {\n        \"email\": owner_email,\n        \"content\": json.dumps(card,\
-          \ ensure_ascii=False),\n    }\n"
+          owner\", {}).get(\"email\", \"\")\n    if actor_email == owner_email:\n\
+          \        return {\"email\": \"\", \"content\": \"\"}\n    actor = _name_from_email(actor_email)\n\
+          \    owner = _name_from_email(owner_email) if owner_email else \"\"\n  \
+          \  time = _format_time(data.get(\"time\", \"\"))\n\n    elements = [\n \
+          \       {\n            \"tag\": \"div\",\n            \"text\": {\n    \
+          \            \"tag\": \"lark_md\",\n                \"content\": f\"**[{page.get('title',\
+          \ 'Untitled')}]({page.get('url', '')})**\",\n            },\n        },\n\
+          \        {\n            \"tag\": \"div\",\n            \"text\": {\n   \
+          \             \"tag\": \"lark_md\",\n                \"content\": f\"Edited\
+          \ by **{actor}**\" + (f\"  ·  Owner: {owner}\" if owner else \"\"),\n  \
+          \          },\n        },\n        {\"tag\": \"hr\"},\n        {\n     \
+          \       \"tag\": \"action\",\n            \"actions\": [\n             \
+          \   {\n                    \"tag\": \"button\",\n                    \"\
+          text\": {\"tag\": \"plain_text\", \"content\": \"View Page\"},\n       \
+          \             \"url\": page.get(\"url\", \"\"),\n                    \"\
+          type\": \"primary\",\n                }\n            ],\n        },\n  \
+          \      {\n            \"tag\": \"note\",\n            \"elements\": [\n\
+          \                {\"tag\": \"plain_text\", \"content\": f\"{time}  ·  Confluence\
+          \ Notification\"},\n            ],\n        },\n    ]\n\n    card = {\n\
+          \        \"config\": {\"wide_screen_mode\": True},\n        \"header\":\
+          \ {\n            \"title\": {\"tag\": \"plain_text\", \"content\": \"✏️\
+          \ Confluence Page Edited\"},\n            \"template\": \"turquoise\",\n\
+          \        },\n        \"elements\": elements,\n    }\n\n    return {\n  \
+          \      \"email\": owner_email,\n        \"content\": json.dumps(card, ensure_ascii=False),\n\
+          \    }\n"
         code_language: python3
         outputs:
           content:
@@ -806,7 +830,7 @@ workflow:
       positionAbsolute:
         x: 415.948460433636
         y: 679.8917976706151
-      selected: false
+      selected: true
       sourcePosition: right
       targetPosition: left
       type: custom
@@ -1056,7 +1080,7 @@ workflow:
           receive_id_type: ''
         plugin_id: langgenius/feishu_message
         plugin_unique_identifier: langgenius/feishu_message:0.0.1@f826c248b7e1cfb5a93e9c4ac526275a633997130f47d65e02dc40d8ae584b3c
-        provider_icon: ""
+        provider_icon: ''
         provider_id: langgenius/feishu_message/feishu_message
         provider_name: langgenius/feishu_message/feishu_message
         provider_type: builtin
@@ -1085,10 +1109,10 @@ workflow:
       id: '17726200387770'
       position:
         x: 822.5876834690885
-        y: 163.97841961739817
+        y: 147.16656654608136
       positionAbsolute:
         x: 822.5876834690885
-        y: 163.97841961739817
+        y: 147.16656654608136
       selected: false
       sourcePosition: right
       targetPosition: left
@@ -1339,7 +1363,7 @@ workflow:
           receive_id_type: ''
         plugin_id: langgenius/feishu_message
         plugin_unique_identifier: langgenius/feishu_message:0.0.1@f826c248b7e1cfb5a93e9c4ac526275a633997130f47d65e02dc40d8ae584b3c
-        provider_icon: ""
+        provider_icon: ''
         provider_id: langgenius/feishu_message/feishu_message
         provider_name: langgenius/feishu_message/feishu_message
         provider_type: builtin
@@ -1367,11 +1391,11 @@ workflow:
       height: 114
       id: '17726200410700'
       position:
-        x: 822.5876834690885
-        y: 466.03661471148655
+        x: 1222.0578141410467
+        y: 478.6455045149743
       positionAbsolute:
-        x: 822.5876834690885
-        y: 466.03661471148655
+        x: 1222.0578141410467
+        y: 478.6455045149743
       selected: false
       sourcePosition: right
       targetPosition: left
@@ -1622,7 +1646,7 @@ workflow:
           receive_id_type: ''
         plugin_id: langgenius/feishu_message
         plugin_unique_identifier: langgenius/feishu_message:0.0.1@f826c248b7e1cfb5a93e9c4ac526275a633997130f47d65e02dc40d8ae584b3c
-        provider_icon: ""
+        provider_icon: ''
         provider_id: langgenius/feishu_message/feishu_message
         provider_name: langgenius/feishu_message/feishu_message
         provider_type: builtin
@@ -1650,10 +1674,10 @@ workflow:
       height: 114
       id: '17726200447000'
       position:
-        x: 822.5876834690885
+        x: 1222.0578141410467
         y: 679.8917976706151
       positionAbsolute:
-        x: 822.5876834690885
+        x: 1222.0578141410467
         y: 679.8917976706151
       selected: false
       sourcePosition: right
@@ -1905,7 +1929,7 @@ workflow:
           receive_id_type: ''
         plugin_id: langgenius/feishu_message
         plugin_unique_identifier: langgenius/feishu_message:0.0.1@f826c248b7e1cfb5a93e9c4ac526275a633997130f47d65e02dc40d8ae584b3c
-        provider_icon: ""
+        provider_icon: ''
         provider_id: langgenius/feishu_message/feishu_message
         provider_name: langgenius/feishu_message/feishu_message
         provider_type: builtin
@@ -1934,10 +1958,10 @@ workflow:
       id: '17726212517840'
       position:
         x: 822.5876834690885
-        y: 326.5060946818658
+        y: 291.481400783289
       positionAbsolute:
         x: 822.5876834690885
-        y: 326.5060946818658
+        y: 291.481400783289
       selected: false
       sourcePosition: right
       targetPosition: left
@@ -2037,8 +2061,66 @@ workflow:
       targetPosition: left
       type: custom
       width: 242
+    - data:
+        cases:
+        - case_id: 'true'
+          conditions:
+          - comparison_operator: not empty
+            id: a7e8faef-3e94-48fc-bf1b-7a942ba607a4
+            value: ''
+            varType: string
+            variable_selector:
+            - '17726200353670'
+            - email
+          id: 'true'
+          logical_operator: and
+        selected: false
+        title: filter edit their own doc
+        type: if-else
+      height: 124
+      id: '1772698447593'
+      position:
+        x: 822.5876834690885
+        y: 679.8917976706151
+      positionAbsolute:
+        x: 822.5876834690885
+        y: 679.8917976706151
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    - data:
+        cases:
+        - case_id: 'true'
+          conditions:
+          - comparison_operator: not empty
+            id: 38650a15-470d-406b-9fb3-3465b53cd88f
+            value: ''
+            varType: string
+            variable_selector:
+            - '17726200324410'
+            - email
+          id: 'true'
+          logical_operator: and
+        selected: false
+        title: filter comment on their own doc
+        type: if-else
+      height: 124
+      id: '1772698477175'
+      position:
+        x: 822.5876834690885
+        y: 466.03661471148655
+      positionAbsolute:
+        x: 822.5876834690885
+        y: 466.03661471148655
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
     viewport:
-      x: 672.4735070656151
-      y: 288.5449433137579
+      x: 152.47350706561485
+      y: 276.5449433137579
       zoom: 0.7137821124830975
   rag_pipeline_variables: []
