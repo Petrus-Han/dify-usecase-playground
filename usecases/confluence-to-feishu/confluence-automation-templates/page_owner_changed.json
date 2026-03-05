@@ -1,0 +1,21 @@
+{
+  "event_type": "page_owner_changed",
+  "time": "{{now}}",
+  "page": {
+    "title": "{{page.title}}",
+    "url": "{{page.url}}",
+    "space_name": "{{space.name}}",
+    "space_key": "{{space.key}}"
+  },
+  "actor": {
+    "email": "{{initiator.emailAddress}}"
+  },
+  "owner": {
+    "old": {
+      "email": "{{page.priorOwner.emailAddress}}"
+    },
+    "new": {
+      "email": "{{page.owner.emailAddress}}"
+    }
+  }
+}
