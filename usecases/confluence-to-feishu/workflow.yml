@@ -2,6 +2,7 @@ app:
   description: ''
   icon: 🤖
   icon_background: '#FFEAD5'
+  icon_type: emoji
   mode: workflow
   name: 【生产勿动】Confluence to Feishu
   use_icon_as_answer_icon: false
@@ -252,47 +253,40 @@ workflow:
           \"Extract display name from email: peter.han@dify.ai -> Peter Han\"\"\"\n\
           \    local = email.split(\"@\")[0] if \"@\" in email else email\n    parts\
           \ = local.replace(\"_\", \".\").replace(\"-\", \".\").split(\".\")\n   \
-          \ return \" \".join(p.capitalize() for p in parts if p)\n\n\ndef _format_time(raw:\
-          \ str) -> str:\n    \"\"\"Format ISO time to readable: 2026-03-04T10:00:45.5+0000\
-          \ -> 2026-03-04 10:00 UTC\"\"\"\n    if not raw:\n        return \"\"\n\
-          \    try:\n        date_part = raw[:10]\n        time_part = raw[11:16]\
-          \ if len(raw) > 16 else \"\"\n        return f\"{date_part} {time_part}\
-          \ UTC\" if time_part else date_part\n    except Exception:\n        return\
-          \ raw\n\n\ndef main(payload: str) -> dict:\n    data = json.loads(payload)\
-          \ if isinstance(payload, str) else payload\n    if \"body\" in data and\
-          \ \"method\" in data:\n        data = data[\"body\"]\n\n    page = data.get(\"\
-          page\", {})\n    blogpost = data.get(\"blogpost\", {})\n    mentions = data.get(\"\
-          mentions\", {})\n    if blogpost.get(\"title\"):\n        title, url, content_type\
-          \ = blogpost[\"title\"], blogpost.get(\"url\", \"\"), \"Blog Post\"\n  \
-          \      author_email = blogpost.get(\"author\", \"\") or \"Someone\"\n  \
-          \  else:\n        title, url, content_type = page.get(\"title\", \"Untitled\"\
-          ), page.get(\"url\", \"\"), \"Page\"\n        author_email = page.get(\"\
-          author\", \"\") or \"Someone\"\n    author = _name_from_email(author_email)\n\
-          \n    email = mentions.get(\"email\", \"Unknown\")\n    time = _format_time(data.get(\"\
-          time\", \"\"))\n\n    card = {\n        \"config\": {\"wide_screen_mode\"\
-          : True},\n        \"header\": {\n            \"title\": {\"tag\": \"plain_text\"\
-          , \"content\": \"\U0001F4E2 Confluence Mention\"},\n            \"template\"\
-          : \"blue\",\n        },\n        \"elements\": [\n            {\n      \
-          \          \"tag\": \"div\",\n                \"text\": {\n            \
-          \        \"tag\": \"lark_md\",\n                    \"content\": f\"**{author}**\
-          \ mentioned you in a {content_type}\",\n                },\n           \
-          \ },\n            {\"tag\": \"hr\"},\n            {\n                \"\
-          tag\": \"div\",\n                \"fields\": [\n                    {\"\
-          is_short\": True, \"text\": {\"tag\": \"lark_md\", \"content\": f\"**\U0001F4C4\
-          \ {content_type}**\\n[{title}]({url})\"}},\n                    {\"is_short\"\
-          : True, \"text\": {\"tag\": \"lark_md\", \"content\": f\"**\U0001F550 Time**\\\
-          n{time}\"}},\n                ],\n            },\n            {\"tag\":\
-          \ \"hr\"},\n            {\n                \"tag\": \"action\",\n      \
-          \          \"actions\": [\n                    {\n                     \
-          \   \"tag\": \"button\",\n                        \"text\": {\"tag\": \"\
-          plain_text\", \"content\": f\"View {content_type}\"},\n                \
-          \        \"url\": url,\n                        \"type\": \"primary\",\n\
-          \                    }\n                ],\n            },\n           \
-          \ {\n                \"tag\": \"note\",\n                \"elements\": [\n\
-          \                    {\"tag\": \"plain_text\", \"content\": \"Confluence\
-          \ → Dify Notification\"},\n                ],\n            },\n        ],\n\
-          \    }\n\n    return {\n        \"email\": email,\n        \"content\":\
-          \ json.dumps(card, ensure_ascii=False),\n    }\n"
+          \ return \" \".join(p.capitalize() for p in parts if p)\n\n\ndef main(payload:\
+          \ str) -> dict:\n    data = json.loads(payload) if isinstance(payload, str)\
+          \ else payload\n    if \"body\" in data and \"method\" in data:\n      \
+          \  data = data[\"body\"]\n\n    page = data.get(\"page\", {})\n    blogpost\
+          \ = data.get(\"blogpost\", {})\n    mentions = data.get(\"mentions\", {})\n\
+          \    if blogpost.get(\"title\"):\n        title, url, content_type = blogpost[\"\
+          title\"], blogpost.get(\"url\", \"\"), \"Blog Post\"\n        author_email\
+          \ = blogpost.get(\"author\", \"\") or \"Someone\"\n    else:\n        title,\
+          \ url, content_type = page.get(\"title\", \"Untitled\"), page.get(\"url\"\
+          , \"\"), \"Page\"\n        author_email = page.get(\"author\", \"\") or\
+          \ \"Someone\"\n    author = _name_from_email(author_email)\n\n    email\
+          \ = mentions.get(\"email\", \"Unknown\")\n    card = {\n        \"config\"\
+          : {\"wide_screen_mode\": True},\n        \"header\": {\n            \"title\"\
+          : {\"tag\": \"plain_text\", \"content\": \"\U0001F4E2 Confluence Mention\"\
+          },\n            \"template\": \"blue\",\n        },\n        \"elements\"\
+          : [\n            {\n                \"tag\": \"div\",\n                \"\
+          text\": {\n                    \"tag\": \"lark_md\",\n                 \
+          \   \"content\": f\"**{author}** mentioned you in a {content_type}\",\n\
+          \                },\n            },\n            {\"tag\": \"hr\"},\n  \
+          \          {\n                \"tag\": \"div\",\n                \"text\"\
+          : {\n                    \"tag\": \"lark_md\",\n                    \"content\"\
+          : f\"**\U0001F4C4 {content_type}:** [{title}]({url})\",\n              \
+          \  },\n            },\n            {\"tag\": \"hr\"},\n            {\n \
+          \               \"tag\": \"action\",\n                \"actions\": [\n \
+          \                   {\n                        \"tag\": \"button\",\n  \
+          \                      \"text\": {\"tag\": \"plain_text\", \"content\":\
+          \ f\"View {content_type}\"},\n                        \"url\": url,\n  \
+          \                      \"type\": \"primary\",\n                    }\n \
+          \               ],\n            },\n            {\n                \"tag\"\
+          : \"note\",\n                \"elements\": [\n                    {\"tag\"\
+          : \"plain_text\", \"content\": \"Confluence → Dify Notification\"},\n  \
+          \              ],\n            },\n        ],\n    }\n\n    return {\n \
+          \       \"email\": email,\n        \"content\": json.dumps(card, ensure_ascii=False),\n\
+          \    }\n"
         code_language: python3
         outputs:
           content:
@@ -610,14 +604,10 @@ workflow:
         code: "import json\n\n\ndef _name_from_email(email: str) -> str:\n    local\
           \ = email.split(\"@\")[0] if \"@\" in email else email\n    parts = local.replace(\"\
           _\", \".\").replace(\"-\", \".\").split(\".\")\n    return \" \".join(p.capitalize()\
-          \ for p in parts if p)\n\n\ndef _format_time(raw: str) -> str:\n    if not\
-          \ raw:\n        return \"\"\n    try:\n        date_part = raw[:10]\n  \
-          \      time_part = raw[11:16] if len(raw) > 16 else \"\"\n        return\
-          \ f\"{date_part} {time_part} UTC\" if time_part else date_part\n    except\
-          \ Exception:\n        return raw\n\n\ndef _build_card(header_title, body_line,\
-          \ page, actor, old_owner, new_owner, space, time):\n    elements = [\n \
-          \       {\n            \"tag\": \"div\",\n            \"text\": {\n    \
-          \            \"tag\": \"lark_md\",\n                \"content\": f\"**[{page.get('title',\
+          \ for p in parts if p)\n\n\ndef _build_card(header_title, body_line, page,\
+          \ actor, old_owner, new_owner, space):\n    elements = [\n        {\n  \
+          \          \"tag\": \"div\",\n            \"text\": {\n                \"\
+          tag\": \"lark_md\",\n                \"content\": f\"**[{page.get('title',\
           \ 'Untitled')}]({page.get('url', '')})**\",\n            },\n        },\n\
           \        {\n            \"tag\": \"div\",\n            \"text\": {\"tag\"\
           : \"lark_md\", \"content\": body_line},\n        },\n    ]\n\n    if space:\n\
@@ -630,34 +620,33 @@ workflow:
           : page.get(\"url\", \"\"),\n                \"type\": \"primary\",\n   \
           \         }\n        ],\n    })\n    elements.append({\n        \"tag\"\
           : \"note\",\n        \"elements\": [\n            {\"tag\": \"plain_text\"\
-          , \"content\": f\"{time}  ·  Confluence Notification\"},\n        ],\n \
-          \   })\n\n    return {\n        \"config\": {\"wide_screen_mode\": True},\n\
-          \        \"header\": {\n            \"title\": {\"tag\": \"plain_text\"\
-          , \"content\": header_title},\n            \"template\": \"orange\",\n \
-          \       },\n        \"elements\": elements,\n    }\n\n\ndef main(payload:\
-          \ str) -> dict:\n    data = json.loads(payload) if isinstance(payload, str)\
-          \ else payload\n    if \"body\" in data and \"method\" in data:\n      \
-          \  data = data[\"body\"]\n\n    page = data.get(\"page\", {})\n    actor_email\
-          \ = data.get(\"actor\", {}).get(\"email\", \"Unknown\")\n    old_owner_email\
-          \ = data.get(\"owner\", {}).get(\"old\", {}).get(\"email\", \"Unknown\"\
-          )\n    new_owner_email = data.get(\"owner\", {}).get(\"new\", {}).get(\"\
-          email\", \"Unknown\")\n    time = _format_time(data.get(\"time\", \"\"))\n\
-          \n    actor = _name_from_email(actor_email)\n    old_owner = _name_from_email(old_owner_email)\n\
+          , \"content\": \"Confluence Notification\"},\n        ],\n    })\n\n   \
+          \ return {\n        \"config\": {\"wide_screen_mode\": True},\n        \"\
+          header\": {\n            \"title\": {\"tag\": \"plain_text\", \"content\"\
+          : header_title},\n            \"template\": \"orange\",\n        },\n  \
+          \      \"elements\": elements,\n    }\n\n\ndef main(payload: str) -> dict:\n\
+          \    data = json.loads(payload) if isinstance(payload, str) else payload\n\
+          \    if \"body\" in data and \"method\" in data:\n        data = data[\"\
+          body\"]\n\n    page = data.get(\"page\", {})\n    actor_email = data.get(\"\
+          actor\", {}).get(\"email\", \"Unknown\")\n    old_owner_email = data.get(\"\
+          owner\", {}).get(\"old\", {}).get(\"email\", \"Unknown\")\n    new_owner_email\
+          \ = data.get(\"owner\", {}).get(\"new\", {}).get(\"email\", \"Unknown\"\
+          )\n    actor = _name_from_email(actor_email)\n    old_owner = _name_from_email(old_owner_email)\n\
           \    new_owner = _name_from_email(new_owner_email)\n\n    space_name = page.get(\"\
           space_name\", \"\")\n    space_key = page.get(\"space_key\", \"\")\n   \
           \ space = f\"{space_name} ({space_key})\" if space_name and space_key else\
           \ space_name or space_key\n\n    card_new = _build_card(\n        header_title=\"\
           \U0001F504 You are the new page owner\",\n        body_line=f\"**{actor}**\
           \ assigned you as the owner\\nPrevious owner: {old_owner}\",\n        page=page,\
-          \ actor=actor, old_owner=old_owner, new_owner=new_owner, space=space, time=time,\n\
+          \ actor=actor, old_owner=old_owner, new_owner=new_owner, space=space,\n\
           \    )\n\n    card_old = _build_card(\n        header_title=\"\U0001F504\
           \ Page ownership transferred\",\n        body_line=f\"**{actor}** transferred\
           \ ownership to **{new_owner}**\",\n        page=page, actor=actor, old_owner=old_owner,\
-          \ new_owner=new_owner, space=space, time=time,\n    )\n\n    return {\n\
-          \        \"new_owner_email\": new_owner_email,\n        \"new_owner_content\"\
-          : json.dumps(card_new, ensure_ascii=False),\n        \"old_owner_email\"\
-          : old_owner_email,\n        \"old_owner_content\": json.dumps(card_old,\
-          \ ensure_ascii=False),\n    }\n"
+          \ new_owner=new_owner, space=space,\n    )\n\n    return {\n        \"new_owner_email\"\
+          : new_owner_email,\n        \"new_owner_content\": json.dumps(card_new,\
+          \ ensure_ascii=False),\n        \"old_owner_email\": old_owner_email,\n\
+          \        \"old_owner_content\": json.dumps(card_old, ensure_ascii=False),\n\
+          \    }\n"
         code_language: python3
         outputs:
           new_owner_content:
@@ -698,45 +687,40 @@ workflow:
         code: "import json\n\n\ndef _name_from_email(email: str) -> str:\n    local\
           \ = email.split(\"@\")[0] if \"@\" in email else email\n    parts = local.replace(\"\
           _\", \".\").replace(\"-\", \".\").split(\".\")\n    return \" \".join(p.capitalize()\
-          \ for p in parts if p)\n\n\ndef _format_time(raw: str) -> str:\n    if not\
-          \ raw:\n        return \"\"\n    try:\n        date_part = raw[:10]\n  \
-          \      time_part = raw[11:16] if len(raw) > 16 else \"\"\n        return\
-          \ f\"{date_part} {time_part} UTC\" if time_part else date_part\n    except\
-          \ Exception:\n        return raw\n\n\ndef main(payload: str) -> dict:\n\
-          \    data = json.loads(payload) if isinstance(payload, str) else payload\n\
-          \    if \"body\" in data and \"method\" in data:\n        data = data[\"\
-          body\"]\n\n    page = data.get(\"page\", {})\n    comment = data.get(\"\
-          comment\", {})\n    \n    owner_email = page.get(\"owner\", \"Unknown\"\
-          ) \n    actor_email = comment.get(\"author\", \"Unknown\")\n    if actor_email\
-          \ == owner_email:\n        return {\"email\": \"\", \"content\": \"\"}\n\
-          \    actor = _name_from_email(actor_email)\n    body = comment.get(\"body\"\
-          , \"\")\n    if len(body) > 200:\n        body = body[:200] + \"...\"\n\
-          \    time = _format_time(data.get(\"time\", \"\"))\n\n    elements = [\n\
-          \        {\n            \"tag\": \"div\",\n            \"text\": {\n   \
-          \             \"tag\": \"lark_md\",\n                \"content\": f\"**[{page.get('title',\
-          \ 'Untitled')}]({page.get('url', '')})**\",\n            },\n        },\n\
-          \        {\n            \"tag\": \"div\",\n            \"text\": {\n   \
-          \             \"tag\": \"lark_md\",\n                \"content\": f\"Comment\
-          \ by **{actor}**\",\n            },\n        },\n    ]\n\n    if body:\n\
-          \        elements.append({\n            \"tag\": \"div\",\n            \"\
-          text\": {\"tag\": \"lark_md\", \"content\": f\"> {body}\"},\n        })\n\
-          \n    elements.append({\"tag\": \"hr\"})\n\n    actions = []\n    if page.get(\"\
-          url\"):\n        actions.append({\n            \"tag\": \"button\",\n  \
-          \          \"text\": {\"tag\": \"plain_text\", \"content\": \"View Page\"\
-          },\n            \"url\": page[\"url\"],\n            \"type\": \"primary\"\
-          ,\n        })\n    if comment.get(\"url\"):\n        actions.append({\n\
+          \ for p in parts if p)\n\n\ndef main(payload: str) -> dict:\n    data =\
+          \ json.loads(payload) if isinstance(payload, str) else payload\n    if \"\
+          body\" in data and \"method\" in data:\n        data = data[\"body\"]\n\n\
+          \    page = data.get(\"page\", {})\n    comment = data.get(\"comment\",\
+          \ {})\n\n    owner_email = page.get(\"owner\", \"Unknown\")\n    actor_email\
+          \ = comment.get(\"author\", \"Unknown\")\n    if actor_email == owner_email:\n\
+          \        return {\"email\": \"\", \"content\": \"\"}\n    actor = _name_from_email(actor_email)\n\
+          \    body = comment.get(\"body\", \"\")\n    if len(body) > 200:\n     \
+          \   body = body[:200] + \"...\"\n    elements = [\n        {\n         \
+          \   \"tag\": \"div\",\n            \"text\": {\n                \"tag\"\
+          : \"lark_md\",\n                \"content\": f\"**[{page.get('title', 'Untitled')}]({page.get('url',\
+          \ '')})**\",\n            },\n        },\n        {\n            \"tag\"\
+          : \"div\",\n            \"text\": {\n                \"tag\": \"lark_md\"\
+          ,\n                \"content\": f\"Comment by **{actor}**\",\n         \
+          \   },\n        },\n    ]\n\n    if body:\n        elements.append({\n \
+          \           \"tag\": \"div\",\n            \"text\": {\"tag\": \"lark_md\"\
+          , \"content\": f\"> {body}\"},\n        })\n\n    elements.append({\"tag\"\
+          : \"hr\"})\n\n    actions = []\n    if page.get(\"url\"):\n        actions.append({\n\
           \            \"tag\": \"button\",\n            \"text\": {\"tag\": \"plain_text\"\
-          , \"content\": \"View Comment\"},\n            \"url\": comment[\"url\"\
-          ],\n            \"type\": \"default\",\n        })\n    if actions:\n  \
-          \      elements.append({\"tag\": \"action\", \"actions\": actions})\n\n\
-          \    elements.append({\n        \"tag\": \"note\",\n        \"elements\"\
-          : [\n            {\"tag\": \"plain_text\", \"content\": f\"{time}  ·  Confluence\
-          \ Notification\"},\n        ],\n    })\n\n    card = {\n        \"config\"\
-          : {\"wide_screen_mode\": True},\n        \"header\": {\n            \"title\"\
-          : {\"tag\": \"plain_text\", \"content\": \"\U0001F4AC Confluence Comment\"\
-          },\n            \"template\": \"green\",\n        },\n        \"elements\"\
-          : elements,\n    }\n\n    return {\n        \"email\": owner_email,\n  \
-          \      \"content\": json.dumps(card, ensure_ascii=False),\n    }\n"
+          , \"content\": \"View Page\"},\n            \"url\": page[\"url\"],\n  \
+          \          \"type\": \"primary\",\n        })\n    if comment.get(\"url\"\
+          ):\n        actions.append({\n            \"tag\": \"button\",\n       \
+          \     \"text\": {\"tag\": \"plain_text\", \"content\": \"View Comment\"\
+          },\n            \"url\": comment[\"url\"],\n            \"type\": \"default\"\
+          ,\n        })\n    if actions:\n        elements.append({\"tag\": \"action\"\
+          , \"actions\": actions})\n\n    elements.append({\n        \"tag\": \"note\"\
+          ,\n        \"elements\": [\n            {\"tag\": \"plain_text\", \"content\"\
+          : \"Confluence Notification\"},\n        ],\n    })\n\n    card = {\n  \
+          \      \"config\": {\"wide_screen_mode\": True},\n        \"header\": {\n\
+          \            \"title\": {\"tag\": \"plain_text\", \"content\": \"\U0001F4AC\
+          \ Confluence Comment\"},\n            \"template\": \"green\",\n       \
+          \ },\n        \"elements\": elements,\n    }\n\n    return {\n        \"\
+          email\": owner_email,\n        \"content\": json.dumps(card, ensure_ascii=False),\n\
+          \    }\n"
         code_language: python3
         outputs:
           content:
@@ -771,40 +755,35 @@ workflow:
         code: "import json\n\n\ndef _name_from_email(email: str) -> str:\n    local\
           \ = email.split(\"@\")[0] if \"@\" in email else email\n    parts = local.replace(\"\
           _\", \".\").replace(\"-\", \".\").split(\".\")\n    return \" \".join(p.capitalize()\
-          \ for p in parts if p)\n\n\ndef _format_time(raw: str) -> str:\n    if not\
-          \ raw:\n        return \"\"\n    try:\n        date_part = raw[:10]\n  \
-          \      time_part = raw[11:16] if len(raw) > 16 else \"\"\n        return\
-          \ f\"{date_part} {time_part} UTC\" if time_part else date_part\n    except\
-          \ Exception:\n        return raw\n\n\ndef main(payload: str) -> dict:\n\
-          \    data = json.loads(payload) if isinstance(payload, str) else payload\n\
-          \    if \"body\" in data and \"method\" in data:\n        data = data[\"\
-          body\"]\n\n    page = data.get(\"page\", {})\n    actor_email = data.get(\"\
-          actor\", {}).get(\"email\", \"Unknown\")\n    owner_email = data.get(\"\
-          owner\", {}).get(\"email\", \"\")\n    if actor_email == owner_email:\n\
-          \        return {\"email\": \"\", \"content\": \"\"}\n    actor = _name_from_email(actor_email)\n\
+          \ for p in parts if p)\n\n\ndef main(payload: str) -> dict:\n    data =\
+          \ json.loads(payload) if isinstance(payload, str) else payload\n    if \"\
+          body\" in data and \"method\" in data:\n        data = data[\"body\"]\n\n\
+          \    page = data.get(\"page\", {})\n    actor_email = data.get(\"actor\"\
+          , {}).get(\"email\", \"Unknown\")\n    owner_email = data.get(\"owner\"\
+          , {}).get(\"email\", \"\")\n    if actor_email == owner_email:\n       \
+          \ return {\"email\": \"\", \"content\": \"\"}\n    actor = _name_from_email(actor_email)\n\
           \    owner = _name_from_email(owner_email) if owner_email else \"\"\n  \
-          \  time = _format_time(data.get(\"time\", \"\"))\n\n    elements = [\n \
-          \       {\n            \"tag\": \"div\",\n            \"text\": {\n    \
-          \            \"tag\": \"lark_md\",\n                \"content\": f\"**[{page.get('title',\
-          \ 'Untitled')}]({page.get('url', '')})**\",\n            },\n        },\n\
-          \        {\n            \"tag\": \"div\",\n            \"text\": {\n   \
-          \             \"tag\": \"lark_md\",\n                \"content\": f\"Edited\
-          \ by **{actor}**\" + (f\"  ·  Owner: {owner}\" if owner else \"\"),\n  \
-          \          },\n        },\n        {\"tag\": \"hr\"},\n        {\n     \
-          \       \"tag\": \"action\",\n            \"actions\": [\n             \
-          \   {\n                    \"tag\": \"button\",\n                    \"\
-          text\": {\"tag\": \"plain_text\", \"content\": \"View Page\"},\n       \
-          \             \"url\": page.get(\"url\", \"\"),\n                    \"\
-          type\": \"primary\",\n                }\n            ],\n        },\n  \
-          \      {\n            \"tag\": \"note\",\n            \"elements\": [\n\
-          \                {\"tag\": \"plain_text\", \"content\": f\"{time}  ·  Confluence\
-          \ Notification\"},\n            ],\n        },\n    ]\n\n    card = {\n\
-          \        \"config\": {\"wide_screen_mode\": True},\n        \"header\":\
-          \ {\n            \"title\": {\"tag\": \"plain_text\", \"content\": \"✏️\
-          \ Confluence Page Edited\"},\n            \"template\": \"turquoise\",\n\
-          \        },\n        \"elements\": elements,\n    }\n\n    return {\n  \
-          \      \"email\": owner_email,\n        \"content\": json.dumps(card, ensure_ascii=False),\n\
-          \    }\n"
+          \  elements = [\n        {\n            \"tag\": \"div\",\n            \"\
+          text\": {\n                \"tag\": \"lark_md\",\n                \"content\"\
+          : f\"**[{page.get('title', 'Untitled')}]({page.get('url', '')})**\",\n \
+          \           },\n        },\n        {\n            \"tag\": \"div\",\n \
+          \           \"text\": {\n                \"tag\": \"lark_md\",\n       \
+          \         \"content\": f\"Edited by **{actor}**\" + (f\"  ·  Owner: {owner}\"\
+          \ if owner else \"\"),\n            },\n        },\n        {\"tag\": \"\
+          hr\"},\n        {\n            \"tag\": \"action\",\n            \"actions\"\
+          : [\n                {\n                    \"tag\": \"button\",\n     \
+          \               \"text\": {\"tag\": \"plain_text\", \"content\": \"View\
+          \ Page\"},\n                    \"url\": page.get(\"url\", \"\"),\n    \
+          \                \"type\": \"primary\",\n                }\n           \
+          \ ],\n        },\n        {\n            \"tag\": \"note\",\n          \
+          \  \"elements\": [\n                {\"tag\": \"plain_text\", \"content\"\
+          : \"Confluence Notification\"},\n            ],\n        },\n    ]\n\n \
+          \   card = {\n        \"config\": {\"wide_screen_mode\": True},\n      \
+          \  \"header\": {\n            \"title\": {\"tag\": \"plain_text\", \"content\"\
+          : \"✏️ Confluence Page Edited\"},\n            \"template\": \"turquoise\"\
+          ,\n        },\n        \"elements\": elements,\n    }\n\n    return {\n\
+          \        \"email\": owner_email,\n        \"content\": json.dumps(card,\
+          \ ensure_ascii=False),\n    }\n"
         code_language: python3
         outputs:
           content:
@@ -830,7 +809,7 @@ workflow:
       positionAbsolute:
         x: 415.948460433636
         y: 679.8917976706151
-      selected: true
+      selected: false
       sourcePosition: right
       targetPosition: left
       type: custom
@@ -2048,7 +2027,7 @@ workflow:
         selected: false
         title: IF/ELSE
         type: if-else
-      height: 268
+      height: 364
       id: '1772623565085'
       position:
         x: 34.23473214183588
@@ -2077,7 +2056,7 @@ workflow:
         selected: false
         title: filter edit their own doc
         type: if-else
-      height: 124
+      height: 140
       id: '1772698447593'
       position:
         x: 822.5876834690885
@@ -2106,7 +2085,7 @@ workflow:
         selected: false
         title: filter comment on their own doc
         type: if-else
-      height: 124
+      height: 140
       id: '1772698477175'
       position:
         x: 822.5876834690885
@@ -2120,7 +2099,7 @@ workflow:
       type: custom
       width: 242
     viewport:
-      x: 152.47350706561485
-      y: 276.5449433137579
-      zoom: 0.7137821124830975
+      x: 6.443992460340496
+      y: 123.28775529908509
+      zoom: 1.198993994389913
   rag_pipeline_variables: []

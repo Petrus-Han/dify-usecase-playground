@@ -7,18 +7,7 @@ def _name_from_email(email: str) -> str:
     return " ".join(p.capitalize() for p in parts if p)
 
 
-def _format_time(raw: str) -> str:
-    if not raw:
-        return ""
-    try:
-        date_part = raw[:10]
-        time_part = raw[11:16] if len(raw) > 16 else ""
-        return f"{date_part} {time_part} UTC" if time_part else date_part
-    except Exception:
-        return raw
-
-
-def _build_card(header_title, body_line, page, actor, old_owner, new_owner, space, time):
+def _build_card(header_title, body_line, page, actor, old_owner, new_owner, space):
     elements = [
         {
             "tag": "div",
@@ -54,7 +43,7 @@ def _build_card(header_title, body_line, page, actor, old_owner, new_owner, spac
     elements.append({
         "tag": "note",
         "elements": [
-            {"tag": "plain_text", "content": f"{time}  ·  Confluence Notification"},
+            {"tag": "plain_text", "content": "Confluence Notification"},
         ],
     })
 
@@ -77,8 +66,6 @@ def main(payload: str) -> dict:
     actor_email = data.get("actor", {}).get("email", "Unknown")
     old_owner_email = data.get("owner", {}).get("old", {}).get("email", "Unknown")
     new_owner_email = data.get("owner", {}).get("new", {}).get("email", "Unknown")
-    time = _format_time(data.get("time", ""))
-
     actor = _name_from_email(actor_email)
     old_owner = _name_from_email(old_owner_email)
     new_owner = _name_from_email(new_owner_email)
@@ -90,13 +77,13 @@ def main(payload: str) -> dict:
     card_new = _build_card(
         header_title="🔄 You are the new page owner",
         body_line=f"**{actor}** assigned you as the owner\nPrevious owner: {old_owner}",
-        page=page, actor=actor, old_owner=old_owner, new_owner=new_owner, space=space, time=time,
+        page=page, actor=actor, old_owner=old_owner, new_owner=new_owner, space=space,
     )
 
     card_old = _build_card(
         header_title="🔄 Page ownership transferred",
         body_line=f"**{actor}** transferred ownership to **{new_owner}**",
-        page=page, actor=actor, old_owner=old_owner, new_owner=new_owner, space=space, time=time,
+        page=page, actor=actor, old_owner=old_owner, new_owner=new_owner, space=space,
     )
 
     return {

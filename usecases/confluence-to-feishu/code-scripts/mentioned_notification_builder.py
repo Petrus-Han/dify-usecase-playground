@@ -8,18 +8,6 @@ def _name_from_email(email: str) -> str:
     return " ".join(p.capitalize() for p in parts if p)
 
 
-def _format_time(raw: str) -> str:
-    """Format ISO time to readable: 2026-03-04T10:00:45.5+0000 -> 2026-03-04 10:00 UTC"""
-    if not raw:
-        return ""
-    try:
-        date_part = raw[:10]
-        time_part = raw[11:16] if len(raw) > 16 else ""
-        return f"{date_part} {time_part} UTC" if time_part else date_part
-    except Exception:
-        return raw
-
-
 def main(payload: str) -> dict:
     data = json.loads(payload) if isinstance(payload, str) else payload
     if "body" in data and "method" in data:
@@ -37,8 +25,6 @@ def main(payload: str) -> dict:
     author = _name_from_email(author_email)
 
     email = mentions.get("email", "Unknown")
-    time = _format_time(data.get("time", ""))
-
     card = {
         "config": {"wide_screen_mode": True},
         "header": {
@@ -56,10 +42,10 @@ def main(payload: str) -> dict:
             {"tag": "hr"},
             {
                 "tag": "div",
-                "fields": [
-                    {"is_short": True, "text": {"tag": "lark_md", "content": f"**📄 {content_type}**\n[{title}]({url})"}},
-                    {"is_short": True, "text": {"tag": "lark_md", "content": f"**🕐 Time**\n{time}"}},
-                ],
+                "text": {
+                    "tag": "lark_md",
+                    "content": f"**📄 {content_type}:** [{title}]({url})",
+                },
             },
             {"tag": "hr"},
             {
