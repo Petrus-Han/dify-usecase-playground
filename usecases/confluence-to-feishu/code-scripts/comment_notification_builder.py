@@ -7,17 +7,6 @@ def _name_from_email(email: str) -> str:
     return " ".join(p.capitalize() for p in parts if p)
 
 
-def _format_time(raw: str) -> str:
-    if not raw:
-        return ""
-    try:
-        date_part = raw[:10]
-        time_part = raw[11:16] if len(raw) > 16 else ""
-        return f"{date_part} {time_part} UTC" if time_part else date_part
-    except Exception:
-        return raw
-
-
 def main(payload: str) -> dict:
     data = json.loads(payload) if isinstance(payload, str) else payload
     if "body" in data and "method" in data:
@@ -34,8 +23,6 @@ def main(payload: str) -> dict:
     body = comment.get("body", "")
     if len(body) > 200:
         body = body[:200] + "..."
-    time = _format_time(data.get("time", ""))
-
     elements = [
         {
             "tag": "div",
@@ -82,7 +69,7 @@ def main(payload: str) -> dict:
     elements.append({
         "tag": "note",
         "elements": [
-            {"tag": "plain_text", "content": f"{time}  ·  Confluence Notification"},
+            {"tag": "plain_text", "content": "Confluence Notification"},
         ],
     })
 
